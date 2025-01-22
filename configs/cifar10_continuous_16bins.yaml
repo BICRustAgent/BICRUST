@@ -1,0 +1,39 @@
+  net:
+    class_name: "UNetVDM"
+    parameters:
+      embedding_dim: 128
+      n_blocks: 24
+      n_attention_heads: 1
+      dropout_prob: 0.1
+      norm_groups: 32
+      input_channels: 8
+      use_fourier_features: True
+      attention_everywhere: False
+      image_height: 64
+      image_width: 64
+  input_adapter:
+    class_name: "FourierImageInputAdapter"
+    parameters:
+      input_channels: 3
+      input_shape: [32, 32]
+      output_height: 3
+      add_pos_feats: False
+      add_mask: False
+  output_adapter:
+    class_name: "OutputAdapter"
+    parameters:
+      input_height: 136    # #####################################
+      output_channels: 8 # (r,g,b)
+      output_height: 64
+      output_width: 64
+  bayesian_flow:
+    class_name: "CtsBayesianFlow"
+    parameters:
+      min_variance: 1e-3
+  distribution_factory:
+    class_name: "DeltaFactory"
+    parameters: {}
+  loss:
+    class_name: "CtsBayesianFlowLoss"
+    parameters:
+      noise_pred: True
